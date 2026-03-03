@@ -1,0 +1,62 @@
+name: Daily GitHub Trending Analysis
+
+on:
+  schedule:
+    # Run every day at UTC 02:00
+    - cron: "0 2 * * *"
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run analysis pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.0-flash
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_REPO: ${{ github.repository }}
+          MIN_STARS: "1000"
+          MAX_REPOS: "25"
+        run: python main.py
+
+      - name: Commit and push report
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          # Only commit if there are staged changes (idempotent)
+          if git diff --cached --quiet; then
+            echo "No new report to commit (already up-to-date)."
+          else
+            git commit -m "chore: add trending report $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Upload report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trending-report-${{ github.run_id }}
+          path: reports/
+          retention-days: 30

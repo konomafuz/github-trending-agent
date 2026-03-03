@@ -1,0 +1,108 @@
+"""
+main.py
+
+Entry point: orchestrates the five pipeline stages.
+
+Usage:
+    python main.py
+
+Environment variables (or .env file):
+    GEMINI_API_KEY      - required
+    GEMINI_MODEL        - optional, default gemini-2.0-flash
+    GITHUB_TOKEN        - optional but strongly recommended
+    TELEGRAM_BOT_TOKEN  - optional
+    TELEGRAM_CHAT_ID    - optional
+    GITHUB_REPO         - optional, used for Telegram report link (e.g. "user/repo")
+    MIN_STARS           - optional, default 1000
+    MAX_REPOS           - optional, default 25
+"""
+
+import logging
+import os
+import sys
+from datetime import date
+from pathlib import Path
+
+# Load .env for local development (no-op in GitHub Actions where env vars are set directly)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+from src.scraper import fetch_trending
+from src.enricher import enrich_repos
+from src.analyzer import analyze_repos
+from src.reporter import generate_report
+from src.notifier import send_telegram
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
+
+
+def main() -> int:
+    min_stars = int(os.getenv("MIN_STARS", "1000"))
+    max_repos = int(os.getenv("MAX_REPOS", "25"))
+    github_repo = os.getenv("GITHUB_REPO", "")
+    today = date.today()
+
+    logger.info("=" * 60)
+    logger.info("GitHub Trending Analysis — %s", today)
+    logger.info("min_stars=%d  max_repos=%d", min_stars, max_repos)
+    logger.info("=" * 60)
+
+    # ── Stage 1: Scrape ─────────────────────────────────────────
+    logger.info("[1/5] Scraping GitHub Trending…")
+    raw_repos = fetch_trending(min_stars=min_stars)
+    if not raw_repos:
+        logger.error("No repos scraped. Aborting.")
+        return 1
+
+    # ── Stage 2: Enrich ─────────────────────────────────────────
+    logger.info("[2/5] Enriching %d repos via GitHub API…", len(raw_repos))
+    enriched = enrich_repos(
+        raw_repos,
+        min_stars=min_stars,
+        max_repos=max_repos,
+        token=os.getenv("GITHUB_TOKEN"),
+    )
+    if not enriched:
+        logger.error("No repos passed enrichment filter. Aborting.")
+        return 1
+    logger.info("  → %d repos after enrichment", len(enriched))
+
+    # ── Stage 3: Analyze ────────────────────────────────────────
+    logger.info("[3/5] Analyzing with Gemini…")
+    analyses = analyze_repos(
+        enriched,
+        api_key=os.getenv("GEMINI_API_KEY"),
+        model_name=os.getenv("GEMINI_MODEL"),
+    )
+    logger.info("  → %d analyses returned", len(analyses))
+
+    # ── Stage 4: Report ─────────────────────────────────────────
+    logger.info("[4/5] Generating Markdown report…")
+    report_path = generate_report(enriched, analyses, report_date=today)
+    logger.info("  → Report: %s", report_path)
+
+    # ── Stage 5: Notify ─────────────────────────────────────────
+    logger.info("[5/5] Sending Telegram notification…")
+    send_telegram(
+        top_repos=enriched,
+        analyses=analyses,
+        report_date=today,
+        github_repo=github_repo,
+    )
+
+    logger.info("=" * 60)
+    logger.info("Pipeline complete. Report saved to: %s", report_path)
+    logger.info("=" * 60)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
