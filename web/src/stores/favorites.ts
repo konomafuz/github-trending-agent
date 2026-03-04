@@ -22,18 +22,23 @@ export const useFavoritesStore = defineStore('favorites', () => {
 
   // Initialize from localStorage or Gist
   async function init() {
+    console.log('Initializing favorites store...')
     // Try localStorage first
     const saved = localStorage.getItem('favorites')
     if (saved) {
       try {
         favorites.value = JSON.parse(saved)
+        console.log('Loaded favorites from localStorage:', favorites.value.length)
       } catch (e) {
         console.error('Failed to parse favorites:', e)
       }
+    } else {
+      console.log('No favorites in localStorage')
     }
 
     // If authenticated, sync with Gist
     if (authStore.isAuthenticated) {
+      console.log('User authenticated, syncing from Gist...')
       await syncFromGist()
     }
   }
@@ -140,6 +145,8 @@ export const useFavoritesStore = defineStore('favorites', () => {
     }
 
     favorites.value.push(favorite)
+    console.log('Added favorite:', favorite)
+    console.log('Total favorites:', favorites.value.length)
     saveToLocalStorage()
 
     if (authStore.isAuthenticated) {
