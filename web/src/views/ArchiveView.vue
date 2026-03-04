@@ -50,7 +50,6 @@
             v-for="repo in filteredRepos"
             :key="repo.full_name"
             :repo="repo"
-            @favorite="handleFavorite"
           />
         </div>
 
@@ -102,10 +101,5 @@ const filteredRepos = computed(() => {
 
 function handleCategorySelect(repoNames: Set<string>) {
   selectedRepoNames.value = repoNames
-}
-
-function handleFavorite(repo: Repo) {
-  // TODO: Implement favorites functionality
-  console.log('Favorite:', repo.full_name)
 }
 </script>

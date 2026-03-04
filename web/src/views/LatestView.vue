@@ -36,7 +36,6 @@
           v-for="repo in displayedRepos"
           :key="repo.full_name"
           :repo="repo"
-          @favorite="handleFavorite"
         />
       </div>
     </div>
@@ -64,10 +63,5 @@ onMounted(() => {
 
 function handleFilter(repos: Repo[]) {
   displayedRepos.value = repos
-}
-
-function handleFavorite(repo: Repo) {
-  // TODO: Implement favorites functionality
-  console.log('Favorite:', repo.full_name)
 }
 </script>

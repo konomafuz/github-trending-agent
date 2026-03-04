@@ -32,6 +32,9 @@
             </router-link>
           </div>
         </div>
+        <div class="flex items-center">
+          <LoginButton />
+        </div>
       </div>
     </div>
   </nav>
@@ -39,6 +42,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import LoginButton from './LoginButton.vue'
 
 const route = useRoute()
 const isActive = (path: string) => route.path === path
