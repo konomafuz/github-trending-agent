@@ -43,7 +43,8 @@ export const useReportsStore = defineStore('reports', () => {
     loading.value = true
     error.value = null
     try {
-      const response = await fetch('/data/latest.json')
+      const basePath = import.meta.env.BASE_URL
+      const response = await fetch(`${basePath}data/latest.json`)
       if (!response.ok) throw new Error('Failed to fetch data')
       data.value = await response.json()
     } catch (e) {
