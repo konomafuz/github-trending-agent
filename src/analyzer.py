@@ -20,6 +20,7 @@ Analysis schema per repo:
 import json
 import logging
 import os
+import random
 import re
 import time
 
@@ -28,8 +29,9 @@ import google.generativeai as genai
 logger = logging.getLogger(__name__)
 
 DEFAULT_MODEL = "gemini-2.5-flash"
-MAX_RETRIES = 3
-RETRY_DELAY = 10  # seconds between retries
+MAX_RETRIES = int(os.getenv("GEMINI_MAX_RETRIES", "5"))
+RETRY_DELAY = int(os.getenv("GEMINI_RETRY_DELAY_SECONDS", "10"))
+RETRY_MAX_DELAY = int(os.getenv("GEMINI_RETRY_MAX_SECONDS", "120"))
 
 SYSTEM_PROMPT = """你是一名资深独立开发者和产品商业化顾问，专注于从开源项目中识别 1→100 的商业化机会。
 你的分析要具体、可执行，避免空话套话。用中文回答。"""
@@ -90,6 +92,20 @@ def _strip_fences(text: str) -> str:
     return text.strip()
 
 
+def _is_rate_limited(exc: Exception) -> bool:
+    msg = str(exc).lower()
+    markers = ("429", "rate limit", "too many requests", "resource exhausted", "quota")
+    return any(marker in msg for marker in markers)
+
+
+def _retry_delay_seconds(attempt: int, exc: Exception) -> float:
+    if _is_rate_limited(exc):
+        # Exponential backoff + jitter avoids synchronized retries across runs.
+        exp_delay = min(RETRY_DELAY * (2 ** (attempt - 1)), RETRY_MAX_DELAY)
+        return exp_delay + random.uniform(0, 1)
+    return float(RETRY_DELAY)
+
+
 def analyze_repos(
     repos: list[dict],
     api_key: str | None = None,
@@ -99,6 +115,7 @@ def analyze_repos(
     Send all repos in a single Gemini API call.
     Retries up to MAX_RETRIES times on failure.
     Returns list of analysis dicts; missing repos get a default stub.
+    Raises RuntimeError when Gemini fully fails so downstream stages stop.
     """
     key = api_key or os.getenv("GEMINI_API_KEY", "")
     if not key:
@@ -128,31 +145,51 @@ def analyze_repos(
             analyses = json.loads(cleaned)
             if not isinstance(analyses, list):
                 raise ValueError(f"Expected JSON array, got {type(analyses)}")
+            if not analyses:
+                raise ValueError("Gemini returned an empty analysis array")
             logger.info("Gemini returned %d analyses on attempt %d", len(analyses), attempt)
             break
         except Exception as exc:
             last_exc = exc
-            logger.warning("Attempt %d/%d failed: %s", attempt, MAX_RETRIES, exc)
             if attempt < MAX_RETRIES:
-                time.sleep(RETRY_DELAY)
+                delay = _retry_delay_seconds(attempt, exc)
+                logger.warning(
+                    "Attempt %d/%d failed: %s. Retrying in %.1fs",
+                    attempt,
+                    MAX_RETRIES,
+                    exc,
+                    delay,
+                )
+                time.sleep(delay)
+            else:
+                logger.warning("Attempt %d/%d failed: %s", attempt, MAX_RETRIES, exc)
 
     if not analyses:
-        logger.error("All Gemini attempts failed. Last error: %s", last_exc)
-        # Return stub analyses so pipeline can continue
-        analyses = [_stub_analysis(r) for r in repos]
+        raise RuntimeError(
+            f"All Gemini attempts failed; aborting pipeline. Last error: {last_exc}"
+        ) from last_exc
 
     # Index by full_name for easy lookup
     analysis_map = {a.get("full_name", ""): a for a in analyses}
 
     # Ensure every input repo has an entry
     result = []
+    missing = []
     for repo in repos:
         fn = repo["full_name"]
         if fn in analysis_map:
-            result.append(analysis_map[fn])
+            item = dict(analysis_map[fn])
+            item.setdefault("_is_stub", False)
+            result.append(item)
         else:
             logger.warning("No analysis returned for %s, using stub", fn)
+            missing.append(fn)
             result.append(_stub_analysis(repo))
+
+    if missing and len(missing) == len(repos):
+        raise RuntimeError(
+            "Gemini returned no usable analyses for any repo; aborting pipeline."
+        )
 
     return result
 
@@ -167,6 +204,7 @@ def _stub_analysis(repo: dict) -> dict:
         "mu_biao_ke_hu": "待分析",
         "ji_shu_fu_za_du": "待分析",
         "tui_jian_xing_dong": "待分析",
+        "_is_stub": True,
     }
 
 
