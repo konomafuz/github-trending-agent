@@ -8,7 +8,7 @@ Usage:
 
 Environment variables (or .env file):
     GEMINI_API_KEY      - required
-    GEMINI_MODEL        - optional, default gemini-2.0-flash
+    GEMINI_MODEL        - optional, default gemini-2.5-flash
     GITHUB_TOKEN        - optional but strongly recommended
     TELEGRAM_BOT_TOKEN  - optional
     TELEGRAM_CHAT_ID    - optional
