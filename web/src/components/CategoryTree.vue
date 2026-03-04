@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { CategoryGroup } from '../utils/category'
 
 const props = defineProps<{
@@ -120,9 +120,12 @@ function emitSelection() {
     return
   }
 
-  let result = repoSets[0]
+  let result: Set<string> = repoSets[0]!
   for (let i = 1; i < repoSets.length; i++) {
-    result = new Set([...result].filter(x => repoSets[i].has(x)))
+    const currentSet = repoSets[i]
+    if (currentSet) {
+      result = new Set([...result].filter(x => currentSet.has(x)))
+    }
   }
 
   emit('select', result)

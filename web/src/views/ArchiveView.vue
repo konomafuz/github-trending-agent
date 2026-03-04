@@ -69,7 +69,6 @@ import { useReportsStore } from '../stores/reports'
 import CategoryTree from '../components/CategoryTree.vue'
 import RepoCard from '../components/RepoCard.vue'
 import { getAllCategories } from '../utils/category'
-import type { Repo } from '../stores/reports'
 
 const reportsStore = useReportsStore()
 const selectedRepoNames = ref<Set<string>>(new Set())

@@ -43,7 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Handle OAuth callback
-  async function handleCallback(code: string) {
+  async function handleCallback(_code: string) {
     loading.value = true
     try {
       // Note: 实际生产环境需要后端服务来交换 code 获取 token
