@@ -15,6 +15,7 @@ Environment variables (or .env file):
     GITHUB_REPO         - optional, used for Telegram report link (e.g. "user/repo")
     MIN_STARS           - optional, default 1000
     MAX_REPOS           - optional, default 25
+    MAX_STUB_RATIO      - optional, default 0.2 (abort if stub analyses exceed ratio)
 """
 
 import logging
@@ -47,6 +48,7 @@ logger = logging.getLogger(__name__)
 def main() -> int:
     min_stars = int(os.getenv("MIN_STARS", "1000"))
     max_repos = int(os.getenv("MAX_REPOS", "25"))
+    max_stub_ratio = float(os.getenv("MAX_STUB_RATIO", "0.2"))
     github_repo = os.getenv("GITHUB_REPO", "")
     today = date.today()
 
@@ -77,12 +79,27 @@ def main() -> int:
 
     # ── Stage 3: Analyze ────────────────────────────────────────
     logger.info("[3/5] Analyzing with Gemini…")
-    analyses = analyze_repos(
-        enriched,
-        api_key=os.getenv("GEMINI_API_KEY"),
-        model_name=os.getenv("GEMINI_MODEL"),
-    )
+    try:
+        analyses = analyze_repos(
+            enriched,
+            api_key=os.getenv("GEMINI_API_KEY"),
+            model_name=os.getenv("GEMINI_MODEL"),
+        )
+    except Exception as exc:
+        logger.error("Analysis stage failed. Aborting before report generation: %s", exc)
+        return 1
     logger.info("  → %d analyses returned", len(analyses))
+    stub_count = sum(1 for a in analyses if a.get("_is_stub"))
+    stub_ratio = (stub_count / len(analyses)) if analyses else 1.0
+    if stub_ratio > max_stub_ratio:
+        logger.error(
+            "Analysis quality gate failed: %d/%d stubs (%.1f%%) > MAX_STUB_RATIO=%.1f%%. Aborting.",
+            stub_count,
+            len(analyses),
+            stub_ratio * 100,
+            max_stub_ratio * 100,
+        )
+        return 1
 
     # ── Stage 4: Report ─────────────────────────────────────────
     logger.info("[4/5] Generating Markdown report…")

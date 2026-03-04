@@ -7,6 +7,10 @@ on:
   # Allow manual trigger for testing
   workflow_dispatch:
 
+concurrency:
+  group: github-trending-analysis-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -38,6 +42,9 @@ jobs:
           GITHUB_REPO: ${{ github.repository }}
           MIN_STARS: "1000"
           MAX_REPOS: "25"
+          GEMINI_MAX_RETRIES: "5"
+          GEMINI_RETRY_DELAY_SECONDS: "10"
+          GEMINI_RETRY_MAX_SECONDS: "120"
         run: python main.py
 
       - name: Commit and push report
