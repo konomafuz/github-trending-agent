@@ -74,8 +74,14 @@ def _build_message(
         lines.append(f"   💡 {action_esc}")
         lines.append("")
 
-    # Report link
+    # Report links
     if github_repo:
+        # Web frontend link
+        web_url = f"https://{github_repo.split('/')[0]}.github.io/{github_repo.split('/')[1]}/"
+        web_url_esc = _escape_mdv2(web_url)
+        lines.append(f"🌐 [在线查看]({web_url_esc})")
+
+        # Markdown report link
         report_url = f"https://github.com/{github_repo}/blob/main/reports/{date_str}.md"
         report_url_esc = _escape_mdv2(report_url)
         lines.append(f"📄 [完整报告]({report_url_esc})")
@@ -160,6 +166,8 @@ def _send_plain_fallback(
         lines.append("")
 
     if github_repo:
+        web_url = f"https://{github_repo.split('/')[0]}.github.io/{github_repo.split('/')[1]}/"
+        lines.append(f"在线查看: {web_url}")
         lines.append(f"完整报告: https://github.com/{github_repo}/blob/main/reports/{date_str}.md")
 
     url = f"{TELEGRAM_API}/bot{token}/sendMessage"
