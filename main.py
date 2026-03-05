@@ -36,6 +36,7 @@ from src.enricher import enrich_repos
 from src.analyzer import analyze_repos
 from src.reporter import generate_report
 from src.notifier import send_telegram
+from src.json_exporter import export_to_json
 
 logging.basicConfig(
     level=logging.INFO,
@@ -105,6 +106,19 @@ def main() -> int:
     logger.info("[4/5] Generating Markdown report…")
     report_path = generate_report(enriched, analyses, report_date=today)
     logger.info("  → Report: %s", report_path)
+
+    # Export to JSON for web frontend
+    logger.info("Exporting data to JSON...")
+    # Merge enriched repos with analyses
+    analysis_map = {a["full_name"]: a for a in analyses}
+    analyzed_repos = []
+    for repo in enriched:
+        merged = {**repo}
+        if repo["full_name"] in analysis_map:
+            merged["analysis"] = analysis_map[repo["full_name"]]
+        analyzed_repos.append(merged)
+    export_to_json(analyzed_repos)
+    logger.info("JSON export complete")
 
     # ── Stage 5: Notify ─────────────────────────────────────────
     logger.info("[5/5] Sending Telegram notification…")

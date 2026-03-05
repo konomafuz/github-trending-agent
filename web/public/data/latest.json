@@ -1,0 +1,141 @@
+{
+  "latest": "2026-03-04",
+  "date": "2026-03-04",
+  "repos": [
+    {
+      "owner": "facebook",
+      "name": "react",
+      "full_name": "facebook/react",
+      "html_url": "https://github.com/facebook/react",
+      "description": "The library for web and native user interfaces",
+      "language": "JavaScript",
+      "stars": 234567,
+      "stars_today": 1234,
+      "forks": 45678,
+      "license": "MIT",
+      "topics": ["react", "javascript", "ui", "frontend"],
+      "readme_excerpt": "React is a JavaScript library for building user interfaces...",
+      "analysis": {
+        "gong_neng_ding_wei": "前端UI框架，用于构建现代化的Web和移动应用",
+        "shang_ye_hua_qian_li": 5,
+        "jing_pin_saas": "Vue.js, Angular, Svelte",
+        "er_ci_kai_fa": [
+          "基于React的企业级组件库",
+          "React Native跨平台开发框架",
+          "React服务端渲染解决方案"
+        ],
+        "mu_biao_ke_hu": "前端开发者、企业技术团队、创业公司",
+        "ji_shu_fu_za_du": "中等 - 需要理解虚拟DOM和组件化思想",
+        "tui_jian_xing_dong": "学习React生态系统，开发可复用的组件库"
+      }
+    },
+    {
+      "owner": "microsoft",
+      "name": "vscode",
+      "full_name": "microsoft/vscode",
+      "description": "Visual Studio Code - Open Source IDE",
+      "language": "TypeScript",
+      "stars": 156789,
+      "stars_today": 890,
+      "forks": 28901,
+      "license": "MIT",
+      "topics": ["vscode", "editor", "typescript", "ide"],
+      "readme_excerpt": "Visual Studio Code is a lightweight but powerful source code editor...",
+      "analysis": {
+        "gong_neng_ding_wei": "开源代码编辑器，支持多种编程语言和扩展",
+        "shang_ye_hua_qian_li": 4,
+        "jing_pin_saas": "JetBrains IDEs, Sublime Text, Atom",
+        "er_ci_kai_fa": [
+          "定制化企业版IDE",
+          "特定领域的代码编辑器",
+          "基于VSCode的在线编程平台"
+        ],
+        "mu_biao_ke_hu": "开发者、企业研发团队、教育机构",
+        "ji_shu_fu_za_du": "复杂 - 涉及编辑器核心、插件系统、语言服务",
+        "tui_jian_xing_dong": "开发VSCode插件，提供特定领域的开发工具"
+      }
+    },
+    {
+      "owner": "vercel",
+      "name": "next.js",
+      "full_name": "vercel/next.js",
+      "description": "The React Framework for Production",
+      "language": "JavaScript",
+      "stars": 98765,
+      "stars_today": 567,
+      "forks": 21234,
+      "license": "MIT",
+      "topics": ["react", "nextjs", "ssr", "framework"],
+      "readme_excerpt": "Next.js is a React framework for building full-stack web applications...",
+      "analysis": {
+        "gong_neng_ding_wei": "React全栈框架，支持SSR和静态生成",
+        "shang_ye_hua_qian_li": 4,
+        "jing_pin_saas": "Gatsby, Remix, Nuxt.js",
+        "er_ci_kai_fa": [
+          "企业级Next.js模板和脚手架",
+          "Next.js性能优化服务",
+          "基于Next.js的SaaS平台"
+        ],
+        "mu_biao_ke_hu": "Web开发者、创业公司、企业前端团队",
+        "ji_shu_fu_za_du": "中等 - 需要理解SSR和React生态",
+        "tui_jian_xing_dong": "构建Next.js项目模板，提供咨询服务"
+      }
+    },
+    {
+      "owner": "rust-lang",
+      "name": "rust",
+      "full_name": "rust-lang/rust",
+      "description": "Empowering everyone to build reliable and efficient software",
+      "language": "Rust",
+      "stars": 87654,
+      "stars_today": 432,
+      "forks": 12345,
+      "license": "Apache-2.0",
+      "topics": ["rust", "programming-language", "systems"],
+      "readme_excerpt": "Rust is a systems programming language focused on safety, speed, and concurrency...",
+      "analysis": {
+        "gong_neng_ding_wei": "系统级编程语言，注重安全性和性能",
+        "shang_ye_hua_qian_li": 3,
+        "jing_pin_saas": "C++, Go, Zig",
+        "er_ci_kai_fa": [
+          "Rust培训和咨询服务",
+          "Rust开发工具和IDE插件",
+          "基于Rust的高性能服务框架"
+        ],
+        "mu_biao_ke_hu": "系统开发者、区块链公司、高性能计算团队",
+        "ji_shu_fu_za_du": "复杂 - 学习曲线陡峭，需要深入理解所有权系统",
+        "tui_jian_xing_dong": "提供Rust培训课程，开发Rust工具链"
+      }
+    },
+    {
+      "owner": "openai",
+      "name": "gpt-4",
+      "full_name": "openai/gpt-4",
+      "description": "GPT-4 API and documentation",
+      "language": "Python",
+      "stars": 45678,
+      "stars_today": 2345,
+      "forks": 8901,
+      "license": "MIT",
+      "topics": ["ai", "gpt", "llm", "openai"],
+      "readme_excerpt": "GPT-4 is OpenAI's most advanced language model...",
+      "analysis": {
+        "gong_neng_ding_wei": "大语言模型API，支持文本生成和理解",
+        "shang_ye_hua_qian_li": 5,
+        "jing_pin_saas": "Claude, Gemini, LLaMA",
+        "er_ci_kai_fa": [
+          "基于GPT-4的垂直领域应用",
+          "GPT-4 API封装和优化服务",
+          "AI助手和聊天机器人平台"
+        ],
+        "mu_biao_ke_hu": "AI创业公司、企业数字化团队、开发者",
+        "ji_shu_fu_za_du": "简单 - API调用简单，但需要理解提示工程",
+        "tui_jian_xing_dong": "开发AI应用，提供API集成服务"
+      }
+    }
+  ],
+  "metadata": {
+    "total": 5,
+    "generated_at": "2026-03-04T14:00:00Z"
+  }
+}
