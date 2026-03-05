@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(test:*)",
+      "Bash(python:*)",
+      "Bash(git:*)",
+      "Bash(npm:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(icacls:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(ls:*)",
+      "Bash(pkill:*)",
+      "Bash(gh pr:*)"
+    ]
+  }
+}

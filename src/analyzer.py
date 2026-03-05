@@ -28,7 +28,7 @@ import google.generativeai as genai
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MODEL = "gemini-2.0-flash"
+DEFAULT_MODEL = "gemini-2.5-flash"
 MAX_RETRIES = int(os.getenv("GEMINI_MAX_RETRIES", "5"))
 RETRY_DELAY = int(os.getenv("GEMINI_RETRY_DELAY_SECONDS", "10"))
 RETRY_MAX_DELAY = int(os.getenv("GEMINI_RETRY_MAX_SECONDS", "120"))
