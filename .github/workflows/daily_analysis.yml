@@ -36,17 +36,17 @@ jobs:
 
       - name: Run analysis pipeline
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-flash
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: deepseek-chat
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GITHUB_REPO: ${{ github.repository }}
           MIN_STARS: "1000"
           MAX_REPOS: "25"
-          GEMINI_MAX_RETRIES: "5"
-          GEMINI_RETRY_DELAY_SECONDS: "10"
-          GEMINI_RETRY_MAX_SECONDS: "120"
+          DEEPSEEK_MAX_RETRIES: "5"
+          DEEPSEEK_RETRY_DELAY_SECONDS: "10"
+          DEEPSEEK_RETRY_MAX_SECONDS: "120"
         run: python main.py
 
       - name: Commit and push report

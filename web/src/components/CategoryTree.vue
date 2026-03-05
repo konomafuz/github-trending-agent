@@ -1,17 +1,20 @@
 <template>
-  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-    <h3 class="text-lg font-semibold text-gray-900 mb-4">分类浏览</h3>
+  <div class="bg-transparent">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-1.5 h-6 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full"></div>
+      <h3 class="text-lg font-bold text-slate-800 tracking-wide">按分类发现</h3>
+    </div>
 
-    <div class="space-y-4">
-      <div v-for="group in categoryGroups" :key="group.id" class="border-b border-gray-100 pb-4 last:border-b-0">
+    <div class="space-y-6">
+      <div v-for="group in categoryGroups" :key="group.id">
         <!-- Group Header -->
         <button
           @click="toggleGroup(group.id)"
-          class="w-full flex items-center justify-between text-left py-2 hover:bg-gray-50 rounded transition-colors"
+          class="w-full flex items-center justify-between text-left py-2 group/btn"
         >
-          <span class="font-medium text-gray-900">{{ group.label }}</span>
+          <span class="font-semibold text-sm text-slate-600 uppercase tracking-wider group-hover/btn:text-indigo-600 transition-colors">{{ group.label }}</span>
           <svg
-            class="w-5 h-5 text-gray-500 transition-transform"
+            class="w-4 h-4 text-slate-400 transition-transform duration-300"
             :class="{ 'rotate-180': expandedGroups.has(group.id) }"
             fill="none"
             stroke="currentColor"
@@ -22,18 +25,21 @@
         </button>
 
         <!-- Categories -->
-        <div v-show="expandedGroups.has(group.id)" class="mt-2 space-y-1 pl-2">
+        <div v-show="expandedGroups.has(group.id)" class="mt-2 space-y-1.5">
           <button
             v-for="category in group.categories"
             :key="category.id"
             @click="selectCategory(group.id, category.id)"
-            class="w-full flex items-center justify-between px-3 py-2 text-sm rounded transition-colors"
+            class="w-full flex items-center justify-between px-3 py-2 text-sm rounded-xl transition-all border border-transparent"
             :class="isSelected(group.id, category.id)
-              ? 'bg-indigo-50 text-indigo-700 font-medium'
-              : 'text-gray-700 hover:bg-gray-50'"
+              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 font-medium scale-[1.02]'
+              : 'text-slate-600 hover:bg-white hover:border-indigo-100 hover:text-indigo-600 hover:shadow-sm'"
           >
-            <span>{{ category.label }}</span>
-            <span class="text-xs text-gray-500">{{ category.count }}</span>
+            <span class="truncate pr-2">{{ category.label }}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-black/10 transition-colors"
+                  :class="isSelected(group.id, category.id) ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'">
+              {{ category.count }}
+            </span>
           </button>
         </div>
       </div>
@@ -43,8 +49,9 @@
     <button
       v-if="selectedCategories.size > 0"
       @click="clearAll"
-      class="w-full mt-4 px-4 py-2 text-sm text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded transition-colors font-medium"
+      class="w-full mt-8 px-4 py-2.5 text-sm font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-100 rounded-xl transition-colors flex items-center justify-center gap-2"
     >
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
       清除所有筛选
     </button>
   </div>

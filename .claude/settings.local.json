@@ -10,7 +10,9 @@
       "Bash(powershell.exe:*)",
       "Bash(ls:*)",
       "Bash(pkill:*)",
-      "Bash(gh pr:*)"
+      "Bash(gh pr:*)",
+      "Bash(rm:*)",
+      "Bash(gh run:*)"
     ]
   }
 }

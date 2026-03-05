@@ -1,0 +1,16 @@
+﻿diff --git a/web/src/components/RepoCard.vue b/web/src/components/RepoCard.vue
+index c1dd3c4..9f3df57 100644
+--- a/web/src/components/RepoCard.vue
++++ b/web/src/components/RepoCard.vue
+@@ -28,7 +28,10 @@
+         </div>
+       </div>
+       <!-- Commercialization Score Badge -->
+-      <div v-if="repo.analysis?.shang_ye_hua_qian_li" class="flex-shrink-0 ml-4">
++      <div
++        v-if="repo.analysis && repo.analysis.shang_ye_hua_qian_li !== undefined && repo.analysis.shang_ye_hua_qian_li !== null"
++        class="flex-shrink-0 ml-4"
++      >
+         <div
+           class="px-3 py-1 rounded-full text-sm font-semibold"
+           :class="getPotentialClass(repo.analysis.shang_ye_hua_qian_li)"

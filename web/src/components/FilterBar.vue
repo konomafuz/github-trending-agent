@@ -1,20 +1,20 @@
 <template>
-  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="bg-white/50 backdrop-blur-xl rounded-2xl shadow-[0_2px_10px_rgb(0,0,0,0.02)] border border-white/50 p-5 sm:p-6 mb-8 mt-2 transition-all">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Language Filter -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          编程语言
+        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+          编程语言过滤
         </label>
         <div class="flex flex-wrap gap-2">
           <button
             v-for="lang in availableLanguages"
             :key="lang"
             @click="toggleLanguage(lang)"
-            class="px-3 py-1 text-sm rounded-full transition-colors"
+            class="px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 border"
             :class="selectedLanguages.includes(lang)
-              ? 'bg-indigo-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+              ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200 transform scale-105'
+              : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600'"
           >
             {{ lang }}
           </button>
@@ -23,17 +23,17 @@
 
       <!-- Stars Range Filter -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          Stars 范围: {{ formatNumber(starsRange[0]) }} - {{ formatNumber(starsRange[1]) }}
+        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+          Stars 范围: <span class="text-indigo-600 font-bold ml-1">{{ formatNumber(starsRange[0]) }}</span> - <span class="text-indigo-600 font-bold">{{ formatNumber(starsRange[1]) }}</span>
         </label>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 mt-2 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
           <input
             type="range"
             v-model.number="starsRange[0]"
             :min="minStars"
             :max="maxStars"
             :step="1000"
-            class="flex-1"
+            class="w-full accent-indigo-600 cursor-pointer h-2 bg-slate-200 rounded-lg appearance-none"
           />
           <input
             type="range"
@@ -41,21 +41,22 @@
             :min="minStars"
             :max="maxStars"
             :step="1000"
-            class="flex-1"
+            class="w-full accent-indigo-600 cursor-pointer h-2 bg-slate-200 rounded-lg appearance-none"
           />
         </div>
       </div>
     </div>
 
     <!-- Active Filters & Clear -->
-    <div v-if="hasActiveFilters" class="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
-      <div class="text-sm text-gray-600">
-        {{ filteredCount }} 个项目符合条件
+    <div v-if="hasActiveFilters" class="mt-6 pt-4 border-t border-slate-200/60 flex items-center justify-between">
+      <div class="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+        ✨ {{ filteredCount }} 个项目符合条件
       </div>
       <button
         @click="clearFilters"
-        class="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+        class="text-sm text-slate-400 hover:text-rose-500 font-medium transition-colors flex items-center gap-1"
       >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         清除筛选
       </button>
     </div>

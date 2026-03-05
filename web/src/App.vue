@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-slate-50 selection:bg-indigo-100 selection:text-indigo-900 flex flex-col items-center">
     <NavBar />
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="w-full max-w-[1000px] px-4 sm:px-6 lg:px-8 py-10 mt-16 z-10 flex-1">
       <router-view />
     </main>
   </div>
@@ -15,7 +15,14 @@ import { useFavoritesStore } from './stores/favorites'
 const favoritesStore = useFavoritesStore()
 
 onMounted(() => {
-  // Initialize favorites store on app load
   favoritesStore.init()
 })
 </script>
+
+<style>
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+</style>

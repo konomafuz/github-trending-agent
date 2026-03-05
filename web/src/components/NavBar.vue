@@ -1,40 +1,46 @@
 <template>
-  <nav class="bg-white shadow-sm border-b">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex">
-          <div class="flex-shrink-0 flex items-center">
-            <h1 class="text-xl font-bold text-gray-900">
-              GitHub Trending 商业化分析
-            </h1>
-          </div>
-          <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-            <router-link
-              to="/"
-              class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              :class="isActive('/') ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
-            >
-              最新
-            </router-link>
-            <router-link
-              to="/archive"
-              class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              :class="isActive('/archive') ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
-            >
-              归档
-            </router-link>
-            <router-link
-              to="/favorites"
-              class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              :class="isActive('/favorites') ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
-            >
-              收藏
-            </router-link>
-          </div>
+  <nav class="fixed top-0 left-0 right-0 z-50 flex justify-center mt-0 sm:mt-4 px-0 sm:px-4">
+    <div class="w-full max-w-[1000px] bg-white/70 backdrop-blur-md rounded-none sm:rounded-2xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] px-4 sm:px-6 py-2 flex items-center justify-between transition-all duration-300">
+      
+      <!-- Brand & Links -->
+      <div class="flex items-center gap-8">
+        <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent transform transition hover:scale-105">
+          GitHub Trending
+        </h1>
+        
+        <div class="hidden md:flex items-center space-x-1 border border-slate-200/50 bg-slate-100/50 rounded-full p-1">
+          <router-link
+            to="/"
+            class="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
+            :class="isActive('/') ? 'bg-white shadow-sm text-indigo-700' : 'text-slate-500 hover:text-slate-800'"
+          >
+            最新
+          </router-link>
+          <router-link
+            to="/archive"
+            class="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
+            :class="isActive('/archive') ? 'bg-white shadow-sm text-indigo-700' : 'text-slate-500 hover:text-slate-800'"
+          >
+            归档
+          </router-link>
+          <router-link
+            to="/favorites"
+            class="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
+            :class="isActive('/favorites') ? 'bg-white shadow-sm text-indigo-700' : 'text-slate-500 hover:text-slate-800'"
+          >
+            收藏
+          </router-link>
         </div>
-        <div class="flex items-center">
-          <LoginButton />
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3">
+        <div class="md:hidden flex items-center space-x-2 mr-2">
+          <router-link to="/" class="text-sm font-medium" :class="isActive('/') ? 'text-indigo-600' : 'text-slate-500'">最新</router-link>
+          <router-link to="/archive" class="text-sm font-medium" :class="isActive('/archive') ? 'text-indigo-600' : 'text-slate-500'">归档</router-link>
+          <router-link to="/favorites" class="text-sm font-medium" :class="isActive('/favorites') ? 'text-indigo-600' : 'text-slate-500'">收藏</router-link>
         </div>
+        <LoginButton />
       </div>
     </div>
   </nav>

@@ -7,8 +7,8 @@ Usage:
     python main.py
 
 Environment variables (or .env file):
-    GEMINI_API_KEY      - required
-    GEMINI_MODEL        - optional, default gemini-2.5-flash
+    DEEPSEEK_API_KEY      - required
+    DEEPSEEK_MODEL        - optional, default deepseek-chat
     GITHUB_TOKEN        - optional but strongly recommended
     TELEGRAM_BOT_TOKEN  - optional
     TELEGRAM_CHAT_ID    - optional
@@ -79,12 +79,12 @@ def main() -> int:
     logger.info("  → %d repos after enrichment", len(enriched))
 
     # ── Stage 3: Analyze ────────────────────────────────────────
-    logger.info("[3/5] Analyzing with Gemini…")
+    logger.info("[3/5] Analyzing with DeepSeek…")
     try:
         analyses = analyze_repos(
             enriched,
-            api_key=os.getenv("GEMINI_API_KEY"),
-            model_name=os.getenv("GEMINI_MODEL"),
+            api_key=os.getenv("DEEPSEEK_API_KEY"),
+            model_name=os.getenv("DEEPSEEK_MODEL"),
         )
     except Exception as exc:
         logger.error("Analysis stage failed. Aborting before report generation: %s", exc)
